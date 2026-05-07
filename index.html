@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Corinthians Dashboard</title>
+
+  <style>
+
+    body {
+      font-family: Arial;
+      background: #0b0b0b;
+      color: white;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      background: white;
+      padding: 10px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+    }
+
+    h1 {
+      margin-top: 10px;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      width: 200px;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background: white;
+      color: black;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #ccc;
+      transform: scale(1.05);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #1a1a1a;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .remover {
+      background: red;
+      color: white;
+      font-size: 12px;
+    }
+
+    h3 {
+      margin-top: 20px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqdD-rkdSCW1GXoMads43M_HPOaNp26peBkg&s">
+
+    <h1>⚫⚪ Corinthians Dashboard</h1>
+
+  </div>
+
+  <!-- INPUT -->
+  <input id="numero" placeholder="Digite um número">
+
+  <br><br>
+
+  <!-- BOTÕES -->
+  <button onclick="adicionar('venda')">Venda</button>
+  <button onclick="adicionar('muda')">Muda</button>
+  <button onclick="adicionar('checagem')">Checagem</button>
+  <button onclick="adicionar('desligou')">Desligou</button>
+
+  <!-- LISTA VENDA -->
+  <h3>Venda (<span id="c-venda">0</span>)</h3>
+  <ul id="lista-venda"></ul>
+
+  <!-- LISTA MUDA -->
+  <h3>Muda (<span id="c-muda">0</span>)</h3>
+  <ul id="lista-muda"></ul>
+
+  <!-- LISTA CHECAGEM -->
+  <h3>Checagem (<span id="c-checagem">0</span>)</h3>
+  <ul id="lista-checagem"></ul>
+
+  <!-- LISTA DESLIGOU -->
+  <h3>Desligou (<span id="c-desligou">0</span>)</h3>
+  <ul id="lista-desligou"></ul>
+
+  <script>
+
+    let venda = [];
+    let muda = [];
+    let checagem = [];
+    let desligou = [];
+
+    function adicionar(tipo) {
+
+      let numero = document.getElementById("numero").value;
+
+      if (!numero) return;
+
+      if (tipo === "venda") venda.push(numero);
+      if (tipo === "muda") muda.push(numero);
+      if (tipo === "checagem") checagem.push(numero);
+      if (tipo === "desligou") desligou.push(numero);
+
+      renderizar();
+
+      document.getElementById("numero").value = "";
+    }
+
+    function remover(lista, index) {
+      lista.splice(index, 1);
+      renderizar();
+    }
+
+    function renderizarLista(lista, nome) {
+
+      let html = "";
+
+      for (let i = 0; i < lista.length; i++) {
+
+        html += `
+          <li>
+            ${lista[i]}
+            <button class="remover" onclick="remover(${nome}, ${i})">
+              X
+            </button>
+          </li>
+        `;
+      }
+
+      return html;
+    }
+
+    function renderizar() {
+
+      document.getElementById("lista-venda").innerHTML =
+        renderizarLista(venda, "venda");
+
+      document.getElementById("lista-muda").innerHTML =
+        renderizarLista(muda, "muda");
+
+      document.getElementById("lista-checagem").innerHTML =
+        renderizarLista(checagem, "checagem");
+
+      document.getElementById("lista-desligou").innerHTML =
+        renderizarLista(desligou, "desligou");
+
+      document.getElementById("c-venda").innerText = venda.length;
+      document.getElementById("c-muda").innerText = muda.length;
+      document.getElementById("c-checagem").innerText = checagem.length;
+      document.getElementById("c-desligou").innerText = desligou.length;
+    }
+
+  </script>
+
+</body>
+</html>
