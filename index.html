@@ -2,65 +2,68 @@
 <html>
 
 <head>
-  <title>Corinthians Dashboard</title>
+  <title>Corinthians vs São Paulo</title>
 
   <style>
 
     body {
-      font-family: Arial;
-      background: #0b0b0b;
-      color: white;
-      padding: 20px;
       margin: 0;
-    }
-
-    .header {
+      font-family: system-ui, Arial;
+      background: radial-gradient(circle at top, #111, #000);
+      color: white;
       text-align: center;
-      margin-bottom: 20px;
+      padding: 20px;
     }
 
-    .header img {
-      width: 120px;
-      height: 120px;
-      object-fit: contain;
-      background: white;
-      padding: 10px;
-      border-radius: 20px;
+    .placar {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      font-size: 40px;
+      margin-top: 20px;
+    }
+
+    .time {
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      min-width: 180px;
     }
 
     input {
       padding: 10px;
       border-radius: 8px;
       border: none;
+      margin-top: 20px;
       width: 200px;
-      outline: none;
+      text-align: center;
     }
 
     button {
-      padding: 10px 15px;
-      margin: 5px;
-      border-radius: 8px;
+      margin-top: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
       border: none;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: bold;
       background: white;
       color: black;
     }
 
-    button:hover {
-      background: #ccc;
-    }
-
     ul {
       list-style: none;
       padding: 0;
+      margin-top: 20px;
     }
 
     li {
-      background: #1a1a1a;
-      margin: 5px 0;
+      background: rgba(255,255,255,0.05);
+      margin: 6px auto;
       padding: 10px;
-      border-radius: 8px;
+      width: 260px;
+      border-radius: 10px;
       display: flex;
       justify-content: space-between;
     }
@@ -68,129 +71,129 @@
     .remover {
       background: red;
       color: white;
-      font-size: 12px;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 8px;
+      cursor: pointer;
+    }
+
+    .evento {
+      margin-top: 15px;
+      font-size: 18px;
+      opacity: 0.9;
     }
 
   </style>
-
 </head>
 
 <body>
 
-<div class="header">
+<h1>⚫⚪ Corinthians vs São Paulo 🔴⚪</h1>
 
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqdD-rkdSCW1GXoMads43M_HPOaNp26peBkg&s">
+<div class="placar">
 
-  <h1>⚫⚪ Corinthians Dashboard</h1>
+  <div class="time">
+    Corinthians<br>
+    <span id="gols-corinthians">0</span>
+  </div>
+
+  <div>×</div>
+
+  <div class="time">
+    São Paulo<br>
+    <span id="gols-sp">0</span>
+  </div>
 
 </div>
 
-<input id="numero" placeholder="Digite um número">
+<input id="numero" placeholder="Adicionar gol (ex: 1, 2, 3)">
+<br>
 
-<br><br>
+<button onclick="adicionar()">⚽ Adicionar Gol</button>
 
-<button onclick="adicionar('venda')">Venda</button>
-<button onclick="adicionar('muda')">Muda</button>
-<button onclick="adicionar('checagem')">Checagem</button>
-<button onclick="adicionar('desligou')">Desligou</button>
+<div class="evento" id="evento"></div>
 
-<h3>Venda (<span id="c-venda">0</span>)</h3>
-<ul id="lista-venda"></ul>
-
-<h3>Muda (<span id="c-muda">0</span>)</h3>
-<ul id="lista-muda"></ul>
-
-<h3>Checagem (<span id="c-checagem">0</span>)</h3>
-<ul id="lista-checagem"></ul>
-
-<h3>Desligou (<span id="c-desligou">0</span>)</h3>
-<ul id="lista-desligou"></ul>
+<ul id="lista"></ul>
 
 <script>
 
-let venda = [];
-let muda = [];
-let checagem = [];
-let desligou = [];
+let gols = [];
 
-// 🔊 VOZ TORCIDA (1 vez)
-function gritarTorcida(){
+// 🧠 jogadores reais (aleatório)
+const jogadores = [
+  "Hugo Souza",
+  "Rodrigo Garro",
+  "Memphis Depay",
+  "Yuri Alberto",
+  "Breno Bidon",
+  "Maycon",
+  "Raniele",
+  "Matheuzinho"
+];
 
+// 🔊 torcida
+function gritar(){
   const msg = new SpeechSynthesisUtterance("VAI CORINTHIANS");
-
   msg.lang = "pt-BR";
   msg.rate = 0.9;
   msg.pitch = 1.1;
-  msg.volume = 1;
-
   speechSynthesis.cancel();
   speechSynthesis.speak(msg);
 }
 
-function adicionar(tipo) {
+// ⚽ atualizar placar
+function atualizarPlacar(){
+  document.getElementById("gols-corinthians").innerText = gols.length;
+}
 
-  let numero = document.getElementById("numero").value;
+// ➕ adicionar gol
+function adicionar(){
 
-  if (!numero) return;
+  let num = document.getElementById("numero").value;
 
-  if (tipo === "venda") {
-    venda.push(numero);
+  if(!num) return;
 
-    // 🏟️ SOM AQUI
-    gritarTorcida();
-  }
+  gols.push(num);
 
-  if (tipo === "muda") muda.push(numero);
-  if (tipo === "checagem") checagem.push(numero);
-  if (tipo === "desligou") desligou.push(numero);
+  const jogador = jogadores[Math.floor(Math.random() * jogadores.length)];
 
-  renderizar();
+  document.getElementById("evento").innerText =
+    `⚽ GOL DO CORINTHIANS! ${jogador}`;
+
+  gritar();
 
   document.getElementById("numero").value = "";
-}
 
-function remover(lista, index) {
-  lista.splice(index, 1);
   renderizar();
 }
 
-function renderizarLista(lista, nomeLista) {
+// ❌ remover gol
+function remover(index){
+
+  gols.splice(index,1);
+
+  atualizarPlacar();
+  renderizar();
+}
+
+// 📋 lista
+function renderizar(){
+
+  atualizarPlacar();
 
   let html = "";
 
-  for (let i = 0; i < lista.length; i++) {
+  for(let i=0;i<gols.length;i++){
 
     html += `
       <li>
-        ${lista[i]}
-        <button class="remover" onclick="remover(${nomeLista}, ${i})">
-          X
-        </button>
+        ⚽ Gol ${gols[i]}
+        <button class="remover" onclick="remover(${i})">X</button>
       </li>
     `;
   }
 
-  return html;
-}
-
-function renderizar() {
-
-  document.getElementById("lista-venda").innerHTML =
-    renderizarLista(venda, "venda");
-
-  document.getElementById("lista-muda").innerHTML =
-    renderizarLista(muda, "muda");
-
-  document.getElementById("lista-checagem").innerHTML =
-    renderizarLista(checagem, "checagem");
-
-  document.getElementById("lista-desligou").innerHTML =
-    renderizarLista(desligou, "desligou");
-
-  document.getElementById("c-venda").innerText = venda.length;
-  document.getElementById("c-muda").innerText = muda.length;
-  document.getElementById("c-checagem").innerText = checagem.length;
-  document.getElementById("c-desligou").innerText = desligou.length;
+  document.getElementById("lista").innerHTML = html;
 }
 
 </script>
