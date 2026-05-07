@@ -26,11 +26,6 @@
       background: white;
       padding: 10px;
       border-radius: 20px;
-      box-shadow: 0 0 15px rgba(255,255,255,0.2);
-    }
-
-    h1 {
-      margin-top: 10px;
     }
 
     input {
@@ -50,12 +45,10 @@
       font-weight: bold;
       background: white;
       color: black;
-      transition: 0.2s;
     }
 
     button:hover {
       background: #ccc;
-      transform: scale(1.05);
     }
 
     ul {
@@ -70,7 +63,6 @@
       border-radius: 8px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
 
     .remover {
@@ -79,120 +71,129 @@
       font-size: 12px;
     }
 
-    h3 {
-      margin-top: 20px;
-    }
-
   </style>
 
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <div class="header">
+<div class="header">
 
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqdD-rkdSCW1GXoMads43M_HPOaNp26peBkg&s">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqdD-rkdSCW1GXoMads43M_HPOaNp26peBkg&s">
 
-    <h1>⚫⚪ Corinthians Dashboard</h1>
+  <h1>⚫⚪ Corinthians Dashboard</h1>
 
-  </div>
+</div>
 
-  <!-- INPUT -->
-  <input id="numero" placeholder="Digite um número">
+<input id="numero" placeholder="Digite um número">
 
-  <br><br>
+<br><br>
 
-  <!-- BOTÕES -->
-  <button onclick="adicionar('venda')">Venda</button>
-  <button onclick="adicionar('muda')">Muda</button>
-  <button onclick="adicionar('checagem')">Checagem</button>
-  <button onclick="adicionar('desligou')">Desligou</button>
+<button onclick="adicionar('venda')">Venda</button>
+<button onclick="adicionar('muda')">Muda</button>
+<button onclick="adicionar('checagem')">Checagem</button>
+<button onclick="adicionar('desligou')">Desligou</button>
 
-  <!-- LISTA VENDA -->
-  <h3>Venda (<span id="c-venda">0</span>)</h3>
-  <ul id="lista-venda"></ul>
+<h3>Venda (<span id="c-venda">0</span>)</h3>
+<ul id="lista-venda"></ul>
 
-  <!-- LISTA MUDA -->
-  <h3>Muda (<span id="c-muda">0</span>)</h3>
-  <ul id="lista-muda"></ul>
+<h3>Muda (<span id="c-muda">0</span>)</h3>
+<ul id="lista-muda"></ul>
 
-  <!-- LISTA CHECAGEM -->
-  <h3>Checagem (<span id="c-checagem">0</span>)</h3>
-  <ul id="lista-checagem"></ul>
+<h3>Checagem (<span id="c-checagem">0</span>)</h3>
+<ul id="lista-checagem"></ul>
 
-  <!-- LISTA DESLIGOU -->
-  <h3>Desligou (<span id="c-desligou">0</span>)</h3>
-  <ul id="lista-desligou"></ul>
+<h3>Desligou (<span id="c-desligou">0</span>)</h3>
+<ul id="lista-desligou"></ul>
 
-  <script>
+<script>
 
-    let venda = [];
-    let muda = [];
-    let checagem = [];
-    let desligou = [];
+let venda = [];
+let muda = [];
+let checagem = [];
+let desligou = [];
 
-    function adicionar(tipo) {
+// 🔊 VOZ TORCIDA (1 vez)
+function gritarTorcida(){
 
-      let numero = document.getElementById("numero").value;
+  const msg = new SpeechSynthesisUtterance("VAI CORINTHIANS");
 
-      if (!numero) return;
+  msg.lang = "pt-BR";
+  msg.rate = 0.9;
+  msg.pitch = 1.1;
+  msg.volume = 1;
 
-      if (tipo === "venda") venda.push(numero);
-      if (tipo === "muda") muda.push(numero);
-      if (tipo === "checagem") checagem.push(numero);
-      if (tipo === "desligou") desligou.push(numero);
+  speechSynthesis.cancel();
+  speechSynthesis.speak(msg);
+}
 
-      renderizar();
+function adicionar(tipo) {
 
-      document.getElementById("numero").value = "";
-    }
+  let numero = document.getElementById("numero").value;
 
-    function remover(lista, index) {
-      lista.splice(index, 1);
-      renderizar();
-    }
+  if (!numero) return;
 
-    function renderizarLista(lista, nome) {
+  if (tipo === "venda") {
+    venda.push(numero);
 
-      let html = "";
+    // 🏟️ SOM AQUI
+    gritarTorcida();
+  }
 
-      for (let i = 0; i < lista.length; i++) {
+  if (tipo === "muda") muda.push(numero);
+  if (tipo === "checagem") checagem.push(numero);
+  if (tipo === "desligou") desligou.push(numero);
 
-        html += `
-          <li>
-            ${lista[i]}
-            <button class="remover" onclick="remover(${nome}, ${i})">
-              X
-            </button>
-          </li>
-        `;
-      }
+  renderizar();
 
-      return html;
-    }
+  document.getElementById("numero").value = "";
+}
 
-    function renderizar() {
+function remover(lista, index) {
+  lista.splice(index, 1);
+  renderizar();
+}
 
-      document.getElementById("lista-venda").innerHTML =
-        renderizarLista(venda, "venda");
+function renderizarLista(lista, nomeLista) {
 
-      document.getElementById("lista-muda").innerHTML =
-        renderizarLista(muda, "muda");
+  let html = "";
 
-      document.getElementById("lista-checagem").innerHTML =
-        renderizarLista(checagem, "checagem");
+  for (let i = 0; i < lista.length; i++) {
 
-      document.getElementById("lista-desligou").innerHTML =
-        renderizarLista(desligou, "desligou");
+    html += `
+      <li>
+        ${lista[i]}
+        <button class="remover" onclick="remover(${nomeLista}, ${i})">
+          X
+        </button>
+      </li>
+    `;
+  }
 
-      document.getElementById("c-venda").innerText = venda.length;
-      document.getElementById("c-muda").innerText = muda.length;
-      document.getElementById("c-checagem").innerText = checagem.length;
-      document.getElementById("c-desligou").innerText = desligou.length;
-    }
+  return html;
+}
 
-  </script>
+function renderizar() {
+
+  document.getElementById("lista-venda").innerHTML =
+    renderizarLista(venda, "venda");
+
+  document.getElementById("lista-muda").innerHTML =
+    renderizarLista(muda, "muda");
+
+  document.getElementById("lista-checagem").innerHTML =
+    renderizarLista(checagem, "checagem");
+
+  document.getElementById("lista-desligou").innerHTML =
+    renderizarLista(desligou, "desligou");
+
+  document.getElementById("c-venda").innerText = venda.length;
+  document.getElementById("c-muda").innerText = muda.length;
+  document.getElementById("c-checagem").innerText = checagem.length;
+  document.getElementById("c-desligou").innerText = desligou.length;
+}
+
+</script>
 
 </body>
 </html>
